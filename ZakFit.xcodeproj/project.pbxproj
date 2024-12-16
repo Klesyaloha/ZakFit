@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		76DD31552D0CD32B00B2332F /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76DD31542D0CD32A00B2332F /* Security.framework */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		768090CE2D0897C5008425F5 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -27,6 +31,7 @@
 		768090BD2D0897C4008425F5 /* ZakFit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ZakFit.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		768090CD2D0897C5008425F5 /* ZakFitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ZakFitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		768090D72D0897C5008425F5 /* ZakFitUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ZakFitUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		76DD31542D0CD32A00B2332F /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -52,6 +57,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				76DD31552D0CD32B00B2332F /* Security.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -78,6 +84,7 @@
 				768090BF2D0897C4008425F5 /* ZakFit */,
 				768090D02D0897C5008425F5 /* ZakFitTests */,
 				768090DA2D0897C5008425F5 /* ZakFitUITests */,
+				76DD31532D0CD32A00B2332F /* Frameworks */,
 				768090BE2D0897C4008425F5 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -90,6 +97,14 @@
 				768090D72D0897C5008425F5 /* ZakFitUITests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		76DD31532D0CD32A00B2332F /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				76DD31542D0CD32A00B2332F /* Security.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

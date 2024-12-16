@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "zakfit_logo.png",
+      "filename" : "11.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "zakfit_logo 1.png",
+      "filename" : "11 1.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "zakfit_logo 2.png",
+      "filename" : "11 2.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

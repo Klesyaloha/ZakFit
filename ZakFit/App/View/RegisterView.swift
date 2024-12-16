@@ -1,23 +1,50 @@
 //
-//  LoginView.swift
+//  RegisterView.swift
 //  ZakFit
 //
-//  Created by Klesya on 10/12/2024.
+//  Created by Klesya on 13/12/2024.
 //
 
 import SwiftUI
 
-struct LoginView: View {
-    @StateObject var viewModel = UserViewModel()
+struct RegisterView: View {
+    @Environment(\.dismiss) var dismiss // Permet de gérer le retour en arrière
     
+    @StateObject var viewModel = UserViewModel()
     var body: some View {
         NavigationStack {
             VStack {
                 Spacer()
-                Image("logo_lauch_screen")
+                Image("zakfit_logo")
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .frame(width: 348.0, height: 167.0)
+                
+                TextField(text: $viewModel.surname, label: {
+                    Text("Nom")
+                        .foregroundStyle(.white)
+                        .bold()
+                        .font(.system(size: 13))
+                })
+                .autocapitalization(.none)
+                .padding()
+                .frame(width: 187, height: 49)
+                .background(.grey)
+                .foregroundStyle(.white)
+                .cornerRadius(24)
+                
+                TextField(text: $viewModel.nameUser, label: {
+                    Text("Prénom")
+                        .foregroundStyle(.white)
+                        .bold()
+                        .font(.system(size: 13))
+                })
+                .autocapitalization(.none)
+                .padding()
+                .frame(width: 187, height: 49)
+                .background(.grey)
+                .foregroundStyle(.white)
+                .cornerRadius(24)
                 
                 TextField(text: $viewModel.email, label: {
                     Text("Email")
@@ -27,7 +54,6 @@ struct LoginView: View {
                 })
                 .autocapitalization(.none)
                 .padding()
-                .font(.system(size: 13))
                 .frame(width: 187, height: 49)
                 .background(.grey)
                 .foregroundStyle(.white)
@@ -41,41 +67,32 @@ struct LoginView: View {
                 })
                 .autocapitalization(.none)
                 .padding()
-                .font(.system(size: 13))
                 .frame(width: 187, height: 49)
                 .background(.grey)
                 .foregroundStyle(.white)
                 .cornerRadius(24)
                 
-                NavigationLink(destination: {
-                    RegisterView()
-                        .navigationBarBackButtonHidden()
+                Button(action: {
+                    dismiss() // Ferme la vue actuelle
                 }, label: {
-                    HStack {
-                        Text("Pas encore Zakcolite ?")
-                            .font(.system(size: 10))
-                            .fontWeight(.semibold)
-                            .foregroundStyle(.black)
-                        
-                        Text("M'inscrire")
-                            .font(.system(size: 10))
-                            .fontWeight(.semibold)
-                            .foregroundStyle(.accent)
-                            .underline(true, pattern: .solid)
-                    }
+                    Text("Je suis déjà membre")
+                        .font(.system(size: 10))
+                        .fontWeight(.semibold)
+                        .underline(true, pattern: .solid)
                 })
                 
                 Button(action: {
                     Task {
+                        await viewModel.register()
                         await viewModel.login()
                     }
                 }, label: {
-                    Text("Entrer")
+                    Text("Je deviens Zakcolite")
                         .padding()
                         .font(.system(size: 14))
                         .bold()
                         .foregroundStyle(.white)
-                        .frame(width: 127, height: 37)
+                        .frame(width: 187, height: 37)
                         .background(
                             LinearGradient(
                                 stops: [
@@ -88,13 +105,7 @@ struct LoginView: View {
                         )
                         .cornerRadius(24)
                 })
-                .padding(.top, 10)
-                
-                if let error = viewModel.loginError {
-                    Text(error)
-                        .font(.system(size: 12))
-                        .foregroundColor(.red)
-                }
+                .padding(.top, 16)
                 
                 Spacer()
             }
@@ -107,5 +118,5 @@ struct LoginView: View {
 }
 
 #Preview {
-    LoginView()
+    RegisterView()
 }
