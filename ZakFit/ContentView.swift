@@ -8,14 +8,20 @@
 import SwiftUI
 
 struct ContentView: View {
+    @StateObject var viewModel = UserViewModel()
     var body: some View {
         VStack {
             Image(systemName: "globe")
                 .imageScale(.large)
                 .foregroundStyle(.tint)
-            Text("Hello, world!")
+            Text("Hello \(viewModel.nameUser)")
         }
         .padding()
+        .onAppear(perform: {
+            Task {
+                await viewModel.login()
+            }
+        })
     }
 }
 
