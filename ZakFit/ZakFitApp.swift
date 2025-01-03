@@ -9,6 +9,7 @@ import SwiftUI
 
 @main
 struct ZakFitApp: App {
+    @StateObject var userViewModel = UserViewModel()
     
     init() {
         // Change la couleur du titre dans toutes les vues avec une navigation bar
@@ -23,6 +24,7 @@ struct ZakFitApp: App {
     var body: some Scene {
         WindowGroup {
             LoginView()
+                .environmentObject(userViewModel)
         }
     }
 }
