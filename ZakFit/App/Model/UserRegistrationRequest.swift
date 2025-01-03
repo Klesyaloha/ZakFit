@@ -12,7 +12,7 @@ struct UserRegistrationRequest: Encodable {
     let surname: String
     let email: String
     let password: String
-    let size: Double?
+    let sizeUser: Double?
     let weight: Double?
     let healthChoice: Int?
     let eatChoice: [Int]?
