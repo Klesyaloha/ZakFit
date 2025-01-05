@@ -37,7 +37,7 @@ struct ProfilView: View {
                 startPoint: UnitPoint(x: 0.5, y: 0.15),
                 endPoint: UnitPoint(x: 0.5, y: 1)
                 )
-                .ignoresSafeArea()
+                .ignoresSafeArea(edges: [.top, .horizontal]) // Ignore le haut et les côtés
                 
                 VStack {
                     ProfilComponentUser(title: "Nom :", content: $viewModel.currentUser.surname, ifEdit: EditSurname)

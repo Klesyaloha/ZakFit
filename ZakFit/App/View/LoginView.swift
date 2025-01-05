@@ -123,7 +123,7 @@ struct LoginView: View {
                 }
                 // Navigation vers la page profil
                 .navigationDestination(isPresented: $viewModel.isLoggedIn) {
-                    ProfilView()
+                    TabBarView()
                         .navigationBarBackButtonHidden(true)
                 }
             }
