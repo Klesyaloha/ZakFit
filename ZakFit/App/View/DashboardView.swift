@@ -52,12 +52,48 @@ struct DashboardView: View {
                 )
                 
                 ScrollView {
-                    Text("Bonjour \(userViewModel.currentUser.nameUser)!")
-                        .font(.system(size: 38, weight: .regular))
-                        .foregroundColor(.accent)
-                        .frame(maxWidth: .infinity, alignment: .topLeading)
-                        .padding(.leading, 16)
-                        .padding(.bottom, 45)
+                    HStack {
+                        Text("Bonjour \(userViewModel.currentUser.nameUser)!")
+                            .font(.system(size: 38, weight: .regular))
+                            .foregroundColor(.accent)
+                            .frame(maxWidth: .infinity, alignment: .topLeading)
+                            .padding(.leading, 16)
+                            .padding(.bottom, 45)
+                        Button(action: {
+                            
+                        }, label: {
+                            VStack(spacing: 3) {
+                                Image(systemName: "plus.circle.fill")
+                                    .font(.system(size: 10))
+                                    .foregroundStyle(.white)
+                                Image(systemName: "fork.knife")
+                                    .font(.system(size: 17))
+                                    .foregroundStyle(.white)
+                            }
+                            .frame(width: 30)
+                            .padding(.all, 7)
+                            .background(.accent.opacity(0.7))
+                            .cornerRadius(10)
+                        })
+                        
+                        Button(action: {
+                            
+                        }, label: {
+                            VStack(spacing: 3) {
+                                Image(systemName: "plus.circle.fill")
+                                    .font(.system(size: 10))
+                                    .foregroundStyle(.white)
+                                Image(systemName: "figure.run")
+                                    .font(.system(size: 17))
+                                    .foregroundStyle(.white)
+                            }
+                            .frame(width: 25)
+                            .padding(.all, 7)
+                            .background(.grey.opacity(0.7))
+                            .cornerRadius(10)
+                            .padding(.trailing,10)
+                        })
+                    }
                         
                     VStack {
                         HStack {
@@ -285,42 +321,6 @@ struct DashboardView: View {
                         .aspectRatio(contentMode: .fit)
                         .frame(width: 99.36239, height: 33.31912)
                         .frame(alignment: .leading)
-                }
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button(action: {
-                        
-                    }, label: {
-                        VStack(spacing: 3) {
-                            Image(systemName: "plus.circle.fill")
-                                .font(.system(size: 10))
-                                .foregroundStyle(.white)
-                            Image(systemName: "fork.knife")
-                                .font(.system(size: 17))
-                                .foregroundStyle(.white)
-                        }
-                        .frame(width: 30)
-                        .padding(.all, 7)
-                        .background(.accent.opacity(0.7))
-                        .cornerRadius(10)
-                    })
-                }
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button(action: {
-                        
-                    }, label: {
-                        VStack(spacing: 3) {
-                            Image(systemName: "plus.circle.fill")
-                                .font(.system(size: 10))
-                                .foregroundStyle(.white)
-                            Image(systemName: "figure.run")
-                                .font(.system(size: 17))
-                                .foregroundStyle(.white)
-                        }
-                        .frame(width: 25)
-                        .padding(.all, 7)
-                        .background(.grey.opacity(0.7))
-                        .cornerRadius(10)
-                    })
                 }
             }
         }
