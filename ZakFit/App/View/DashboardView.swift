@@ -258,7 +258,7 @@ struct DashboardView: View {
                                     .padding()
                             }
                             
-                            ForEach(physicalActivityViewModel.activities, id: \.id) { activity in
+                            ForEach(physicalActivityViewModel.activities.filter({ $0.dateActivity == Date()}), id: \.id) { activity in
                                     HStack {
                                         Spacer()
                                         Text(activity.typeActivity.nameTypeActivity ?? "Inconnu")
