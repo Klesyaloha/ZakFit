@@ -9,16 +9,7 @@ import Foundation
 import Security
 import SwiftUI
 
-class UserViewModel: ObservableObject, @unchecked Sendable{
-//    @Published var id: UUID?
-//    @Published var nameUser: String = "" // Nom de l'utilisateur
-//    @Published var surname: String = "" // Prénom de l'utilisateur
-//    @Published var email: String = "alice.johnson@example.com" // Email
-//    @Published var password: String = "hashed_password_3" // Mot de passe
-//    @Published var sizeUser: Double = 0 // Taille (optionnel)
-//    @Published var weight: Double = 0 // Poids (optionnel)
-//    @Published var healthChoice: Int = 0 // Choix santé (optionnel)
-//    @Published var eatChoice: [Int] = [] // Choix alimentaires (optionnel)
+class UserViewModel: ObservableObject, @unchecked Sendable {
     @Published var currentUser = User(idUser: UUID(uuidString: "00000000-0000-0000-0000-000000000000")!, nameUser: "John", surname: "Doe", email: "alice.johnson@test.com",password: "hashed_password_3", sizeUser: 50, weight: 50, healthChoice: 0, eatChoice: [])
     @Published var originalUser: User?
     
@@ -100,6 +91,7 @@ class UserViewModel: ObservableObject, @unchecked Sendable{
         request.httpMethod = "GET"
         request.cachePolicy = .reloadIgnoringLocalCacheData
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
         guard let token = KeychainManager.getTokenFromKeychain() else {
             DispatchQueue.main.async {
                 self.loginError = "Erreur lors de la récupération du token."
@@ -157,7 +149,7 @@ class UserViewModel: ObservableObject, @unchecked Sendable{
         }
         
         // Préparer les données à envoyer
-        let userData = UserRegistrationRequest(
+        let userData = PartialUserUpdate(
             nameUser: self.currentUser.nameUser,
             surname: self.currentUser.surname,
             email: self.currentUser.email,

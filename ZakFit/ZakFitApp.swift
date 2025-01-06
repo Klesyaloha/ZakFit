@@ -10,6 +10,10 @@ import SwiftUI
 @main
 struct ZakFitApp: App {
     @StateObject var userViewModel = UserViewModel()
+    @StateObject var physicalActivityViewModel = PhysicalActivityViewModel()
+    @StateObject var typeActivityViewModel = TypeActivityViewModel()
+    @StateObject var mealViewModel = MealViewModel()
+    @StateObject var foodViewModel = FoodViewModel()
     
     init() {
         // Change la couleur du titre dans toutes les vues avec une navigation bar
@@ -23,8 +27,17 @@ struct ZakFitApp: App {
     
     var body: some Scene {
         WindowGroup {
-            LoginView()
-                .environmentObject(userViewModel)
-        }
+            if !userViewModel.isLoggedIn {
+                LoginView()
+            }
+            else {
+                TabBarView()
+            }
+                
+        }.environmentObject(userViewModel)
+            .environmentObject(physicalActivityViewModel)
+            .environmentObject(typeActivityViewModel)
+            .environmentObject(mealViewModel)
+            .environmentObject(foodViewModel)
     }
 }

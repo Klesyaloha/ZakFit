@@ -21,33 +21,34 @@ struct TabBarView: View {
 
     var body: some View {
         TabView(selection: $selectedTab) {
-            Text("Contenu du Tableau de Bord")
+            DashboardView()
                 .tabItem {
                     Image(systemName: "list.clipboard.fill")
                     Text(Tab.home.rawValue)
                 }
                 .tag(Tab.home)
 
-            Text("Contenu des Activités")
+            ActivitiesView()
                 .tabItem {
                     Image(systemName: "figure.run")
                     Text(Tab.activities.rawValue)
                 }
                 .tag(Tab.activities)
 
-            Text("Contenu Nutrition")
+            NutritionView()
                 .tabItem {
                     Image(systemName: "fork.knife")
                     Text(Tab.food.rawValue)
                 }
                 .tag(Tab.food)
 
-            Text("Contenu Performances")
-                .tabItem {
-                    Image(systemName: "medal.fill")
-                    Text(Tab.acts.rawValue)
-                }
-                .tag(Tab.acts)
+//            Text("Contenu Performances")
+//                .tabItem {
+//                    Image(systemName: "medal.fill")
+//                    Text(Tab.acts.rawValue)
+//                }
+//                .tag(Tab.acts)
+            
             ProfilView()
                 .tabItem {
                     Image(systemName: "person.fill")
@@ -62,5 +63,9 @@ struct TabBarView: View {
 #Preview {
     TabBarView()
         .environmentObject(UserViewModel())
+        .environmentObject(PhysicalActivityViewModel())
+        .environmentObject(TypeActivityViewModel())
+        .environmentObject(MealViewModel())
+        .environmentObject(FoodViewModel())
 }
 

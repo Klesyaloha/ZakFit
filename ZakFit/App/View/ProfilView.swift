@@ -213,8 +213,6 @@ struct ProfilView: View {
                                 }
                             }
                             
-                            Spacer()
-                            
                             Button(action: {
                                 Task {
                                     await viewModel.updateUserData()
@@ -231,8 +229,7 @@ struct ProfilView: View {
                                     .cornerRadius(24)
                                     .foregroundStyle(.white)
                             })
-                            
-                            Spacer()
+                            .padding()
                         }
                     }
                     .padding(.all, 30)

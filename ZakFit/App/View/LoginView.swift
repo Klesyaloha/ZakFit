@@ -121,11 +121,11 @@ struct LoginView: View {
                     
                     Spacer()
                 }
-                // Navigation vers la page profil
-                .navigationDestination(isPresented: $viewModel.isLoggedIn) {
-                    TabBarView()
-                        .navigationBarBackButtonHidden(true)
-                }
+//                // Navigation vers la page profil
+//                .navigationDestination(isPresented: $viewModel.isLoggedIn) {
+//                    TabBarView()
+//                        .navigationBarBackButtonHidden(true)
+//                }
             }
         }
     }
@@ -140,4 +140,7 @@ struct LoginView: View {
 #Preview {
     LoginView()
         .environmentObject(UserViewModel()) // Injecter l'instance de UserViewModel dans l'environnement
+        .environmentObject(PhysicalActivityViewModel())
+        .environmentObject(TypeActivityViewModel())
+        .environmentObject(MealViewModel())
 }

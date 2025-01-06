@@ -121,7 +121,7 @@ struct RegisterView: View {
                     Spacer()
                 }
                 .navigationDestination(isPresented: $viewModel.isLoggedIn) {
-                    ContentView()
+                    TabBarView()
                         .navigationBarBackButtonHidden(true)
                 }
             }
