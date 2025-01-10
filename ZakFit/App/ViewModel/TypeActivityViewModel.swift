@@ -1,5 +1,5 @@
 //
-//  TypeactivityViewModel.swift
+//  TypeActivityViewModel.swift
 //  ZakFit
 //
 //  Created by Klesya on 05/01/2025.
