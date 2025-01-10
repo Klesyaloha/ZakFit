@@ -41,7 +41,7 @@ struct LoginView: View {
                     .foregroundStyle(.white)
                     .cornerRadius(24)
                     
-                    TextField(text: Binding(
+                    SecureField(text: Binding(
                         get: { viewModel.currentUser.password ?? "" },
                         set: { viewModel.currentUser.password = $0 }), label: {
                         Text("Mot de Passe")

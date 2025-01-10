@@ -57,7 +57,6 @@ class TypeActivityViewModel: ObservableObject, @unchecked Sendable {
             // Mettre à jour la liste des types d'activités
             DispatchQueue.main.async {
                 self.typeActivities = decodedTypeActivities
-                print("Types d'activités mis à jour : \(self.typeActivities)")
             }
             
         } catch {

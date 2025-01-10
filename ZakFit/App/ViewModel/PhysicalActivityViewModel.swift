@@ -38,7 +38,7 @@ class PhysicalActivityViewModel: ObservableObject {
 
         self.isLoading = true
         
-        // Attendez que les types d'activités soient récupérés avant de continuer
+        // Attendre que les types d'activités soient récupérés avant de continuer
         await typeActivityViewModel.fetchTypeActivities()
         
         do {
@@ -47,17 +47,15 @@ class PhysicalActivityViewModel: ObservableObject {
                 throw URLError(.badServerResponse)
             }
 
-            // Affichage de la réponse brute
-            print("Réponse brute du serveur : \(String(data: data, encoding: .utf8) ?? "Aucune donnée valide")")
+//            // Affichage de la réponse brute
+//            print("Réponse brute du serveur : \(String(data: data, encoding: .utf8) ?? "Aucune donnée valide")")
 
             let decoder = JSONDecoder()
             decoder.dateDecodingStrategy = .iso8601  // Décode les dates au format ISO8601
 
             do {
                 let decodedActivities = try decoder.decode([PhysicalActivity].self, from: data)
-                print("Activités décodées : \(decodedActivities)")
-                
-                // Mettre à jour les activités avec le nom de type d'activité
+                // Met à jour les activités avec le nom de type d'activité
                 var updatedActivities: [PhysicalActivity] = []
                 for i in 0..<decodedActivities.count {
                     var activity = decodedActivities[i]
@@ -120,15 +118,29 @@ class PhysicalActivityViewModel: ObservableObject {
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         
+        // Verification du typeActivity.id
+        guard typeActivityViewModel.typeActivities.first(where: { $0.id == activity.typeActivity.id }) != nil else {
+            self.errorMessage = "Type d'activité invalide ou inexistant."
+            return
+        }
+        
+        let isoFormatter = ISO8601DateFormatter()
+        let jsonBody: [String: Any] = [
+            "durationActivity": activity.durationActivity,
+            "caloriesBurned": activity.caloriesBurned ?? 0,
+            "dateActivity": isoFormatter.string(from: activity.dateActivity), // Format ISO 8601
+            "typeActivityID": activity.typeActivity.id.uuidString
+        ]
+        
         do {
-            let jsonData = try JSONEncoder().encode(activity)
+            // Serialization
+            let jsonData = try JSONSerialization.data(withJSONObject: jsonBody)
             request.httpBody = jsonData
             
             let (_, response) = try await URLSession.shared.data(for: request)
             guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 201 else {
                 throw URLError(.badServerResponse)
             }
-            await fetchActivities() // Recharge la liste après ajout
         } catch {
             self.errorMessage = "Erreur lors de l'ajout de l'activité: \(error.localizedDescription)"
         }
@@ -140,27 +152,33 @@ class PhysicalActivityViewModel: ObservableObject {
             self.errorMessage = "Token manquant. Veuillez vous reconnecter."
             return
         }
-        
         guard let url = URL(string: "\(baseURL)\(activity.id.uuidString)") else {
             self.errorMessage = "URL ou ID invalide."
             return
         }
-        
         var request = URLRequest(url: url)
         request.httpMethod = "PUT"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         
+        let isoFormatter = ISO8601DateFormatter()
+        let jsonBody: [String: Any] = [
+            "durationActivity": activity.durationActivity,
+            "caloriesBurned": activity.caloriesBurned ?? 0,
+            "dateActivity": isoFormatter.string(from: activity.dateActivity), // Format ISO 8601
+            "typeActivityID": activity.typeActivity.id.uuidString
+        ]
+        
         do {
-            let jsonData = try JSONEncoder().encode(activity)
+            // Serialization
+            let jsonData = try JSONSerialization.data(withJSONObject: jsonBody)
             request.httpBody = jsonData
             
             let (_, response) = try await URLSession.shared.data(for: request)
             guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
                 throw URLError(.badServerResponse)
             }
-            
-            await fetchActivities() // Recharge la liste après mise à jour
+//            await fetchActivities() // Recharge la liste après mise à jour
         } catch {
             self.errorMessage = "Erreur lors de la mise à jour de l'activité: \(error.localizedDescription)"
         }
