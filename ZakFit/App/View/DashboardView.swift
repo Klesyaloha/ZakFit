@@ -189,14 +189,18 @@ struct DashboardView: View {
                             }
                             .frame(maxWidth: .infinity, alignment: .leading)
                             
-                            if mealViewModel.meals.filter({ $0.meal.dateMeal == Date()}).isEmpty {
+                            if !(mealViewModel.meals.contains(where: {
+                                Calendar.current.isDate($0.meal.dateMeal, inSameDayAs: Date())
+                            })) {
                                 Text("Aucun repas enregistré")
                                     .font(.system(size: 17, weight: .semibold))
                                     .foregroundStyle(.grey)
                                     .padding()
                             }
-                            
-                            ForEach(mealViewModel.meals.filter({ $0.meal.dateMeal == Date()}), id: \.id) { mealWithFood in
+                            ForEach(mealViewModel.meals.filter { mealWithFood in
+                                let calendar = Calendar.current
+                                return calendar.isDate(mealWithFood.meal.dateMeal, inSameDayAs: Date())
+                            }, id: \.id) { mealWithFood in
                                     HStack {
                                         Spacer()
                                         Text(mealWithFood.meal.typeOfMeal)
@@ -251,14 +255,19 @@ struct DashboardView: View {
                             }
                             .frame(maxWidth: .infinity, alignment: .leading)
                             
-                            if physicalActivityViewModel.activities.filter({ $0.dateActivity == Date()}).isEmpty {
+                            if !(physicalActivityViewModel.activities.contains(where: {
+                                Calendar.current.isDate($0.dateActivity, inSameDayAs: Date())
+                            })) {
                                 Text("Aucune activité enregistré")
                                     .font(.system(size: 17, weight: .semibold))
                                     .foregroundStyle(.grey)
                                     .padding()
                             }
                             
-                            ForEach(physicalActivityViewModel.activities.filter({ $0.dateActivity == Date()}), id: \.id) { activity in
+                            ForEach(physicalActivityViewModel.activities.filter { activity in
+                                let calendar = Calendar.current
+                                return calendar.isDate(activity.dateActivity, inSameDayAs: Date())
+                            }, id: \.id) { activity in
                                     HStack {
                                         Spacer()
                                         Text(activity.typeActivity.nameTypeActivity ?? "Inconnu")
