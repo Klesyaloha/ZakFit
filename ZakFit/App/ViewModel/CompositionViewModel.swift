@@ -9,14 +9,14 @@ import Foundation
 import Combine
 import SwiftUICore
 
-class CompositionViewModel: ObservableObject {
+class CompositionViewModel: ObservableObject, @unchecked Sendable {
     // Liste des compositions associées aux repas
     @Published var compositions: [Composition] = []
     @Published var selectedComposition: Composition?
     @Published var isLoading: Bool = false
     @Published var errorMessage: String?
     
-    private let baseURL = "http://127.0.0.1:8080/compositions/"
+    private let baseURL = "http://192.168.0.199:8080/compositions/"
     
     // Charger toutes les compositions d'un utilisateur
     func fetchCompositions() async {
@@ -34,7 +34,9 @@ class CompositionViewModel: ObservableObject {
         request.httpMethod = "GET"
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
 
-        self.isLoading = true
+        DispatchQueue.main.async {
+            self.isLoading = true
+        }
         
         do {
             let (data, response) = try await URLSession.shared.data(for: request)
@@ -50,7 +52,7 @@ class CompositionViewModel: ObservableObject {
 
             do {
                 let decodedCompositions = try decoder.decode([Composition].self, from: data)
-                print("Compositions décodées : \(decodedCompositions)")
+//                print("Compositions décodées : \(decodedCompositions)")
                 
                 // Mettre à jour la liste des compositions
                 self.compositions = decodedCompositions
@@ -60,13 +62,66 @@ class CompositionViewModel: ObservableObject {
                 self.errorMessage = "Erreur lors du décodage des compositions: \(error.localizedDescription)"
             }
         } catch {
-            self.errorMessage = "Erreur lors du chargement des compositions: \(error.localizedDescription)"
+            DispatchQueue.main.async {
+                self.errorMessage = "Erreur lors du chargement des compositions: \(error.localizedDescription)"
+            }
         }
         self.isLoading = false
     }
     
+    /// Récupère toutes les compositions associées à un repas spécifique
+    func fetchCompositions(for mealId: UUID) async {
+        guard let token = KeychainManager.getTokenFromKeychain() else {
+            self.errorMessage = "Token manquant. Veuillez vous reconnecter."
+            print("❌ Erreur: Token manquant")
+            return
+        }
+
+        guard let url = URL(string: "\(baseURL)\(mealId)") else {
+            self.errorMessage = "URL invalide."
+            print("❌ Erreur: URL invalide -> \(baseURL)\(mealId)")
+            return
+        }
+
+        print("🌍 Requête envoyée à l'URL: \(url.absoluteString)")
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+
+        do {
+            let (data, response) = try await URLSession.shared.data(for: request)
+
+            // Vérifier le statut de la réponse
+            if let httpResponse = response as? HTTPURLResponse {
+                print("📡 Statut HTTP: \(httpResponse.statusCode)")
+                if httpResponse.statusCode != 200 {
+                    print("❌ Erreur: Réponse du serveur avec code \(httpResponse.statusCode)")
+                    self.errorMessage = "Erreur \(httpResponse.statusCode)"
+                    return
+                }
+            }
+
+            // Vérifier le contenu brut de la réponse
+            if let jsonString = String(data: data, encoding: .utf8) {
+                print("📜 JSON brut reçu: \(jsonString)")
+            } else {
+                print("⚠️ Impossible de convertir les données en texte lisible")
+            }
+
+            let decodedCompositions = try JSONDecoder().decode([Composition].self, from: data)
+
+            print("✅ Nombre de compositions décodées: \(decodedCompositions.count)")
+
+            self.compositions = decodedCompositions
+        } catch {
+            print("❌ Erreur lors du fetch des compositions: \(error.localizedDescription)")
+            self.errorMessage = "Erreur lors du chargement des compositions."
+        }
+    }
+    
     // Ajouter une composition
-    func addComposition(_ composition: Composition) async {
+    func addComposition(_ composition: PartialComposition) async {
         guard let token = KeychainManager.getTokenFromKeychain() else {
             self.errorMessage = "Token manquant. Veuillez vous reconnecter."
             return
@@ -92,7 +147,9 @@ class CompositionViewModel: ObservableObject {
             }
             await fetchCompositions() // Recharge la liste des compositions après ajout
         } catch {
-            self.errorMessage = "Erreur lors de l'ajout de la composition: \(error.localizedDescription)"
+            DispatchQueue.main.async {
+                self.errorMessage = "Erreur lors de l'ajout de la composition: \(error.localizedDescription)"
+            }
         }
     }
     

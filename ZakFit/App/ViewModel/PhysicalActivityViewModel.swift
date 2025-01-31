@@ -18,7 +18,7 @@ class PhysicalActivityViewModel: ObservableObject {
     
     @ObservedObject var typeActivityViewModel = TypeActivityViewModel() // Ajout de TypeActivityViewModel
 
-    private let baseURL = "http://127.0.0.1:8080/physical_activities/"
+    private let baseURL = "http://192.168.0.199:8080/physical_activities/"
 
     // Charger toutes les activités pour l'utilisateur connecté
     func fetchActivities() async {

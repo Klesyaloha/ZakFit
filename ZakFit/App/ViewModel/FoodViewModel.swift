@@ -13,7 +13,7 @@ class FoodViewModel: ObservableObject, @unchecked Sendable {
     @Published var isLoading: Bool = false
     @Published var errorMessage: String?
     
-    private let baseURL = "http://127.0.0.1:8080/foods/"
+    private let baseURL = "http://192.168.0.199:8080/foods/"
     
     func fetchFoods() async {
         guard let token = KeychainManager.getTokenFromKeychain() else {
@@ -30,7 +30,9 @@ class FoodViewModel: ObservableObject, @unchecked Sendable {
         request.httpMethod = "GET"
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         
-        self.isLoading = true
+        DispatchQueue.main.async {
+            self.isLoading = true
+        }
         
         do {
             let (data, response) = try await URLSession.shared.data(for: request)
@@ -45,14 +47,18 @@ class FoodViewModel: ObservableObject, @unchecked Sendable {
                 let decodedFoods = try decoder.decode([Food].self, from: data)
                 DispatchQueue.main.async {
                     self.foods = decodedFoods
-                    print("Aliments récupérés")
+//                    print("Aliments récupérés")
                 }
             }
         } catch {
-            // Affichage des erreurs détaillées lors du décodage
-            self.errorMessage = "Erreur lors du décodage des aliments: \(error.localizedDescription)"
+            DispatchQueue.main.async {
+                // Affichage des erreurs détaillées lors du décodage
+                print("Erreur lors de la récupération des aliments: \(error.localizedDescription)")
+            }
         }
-        self.isLoading = false
+        DispatchQueue.main.async {
+            self.isLoading = false
+        }
     }
     
     func addFood(_ food: Food) async {

@@ -13,6 +13,9 @@ struct ProfilView: View {
     @State var EditSurname: Bool = false
     @State var EditEmail: Bool = false
     @State var EditPassword: Bool = false
+    @State var password = "•••••••••••••"
+    @State var oldPassword = ""
+    @State var showChangePassword: Bool = false
     @State var passwordIsVisible: Bool = false
     @State private var isHovered = false
     @State private var selectedHealthGoal: String = "Aucun" // Initialiser avec la valeur par défaut (tag(1))
@@ -47,7 +50,21 @@ struct ProfilView: View {
                     
                     ProfilComponentUser(title: "Email :", content: $viewModel.currentUser.email, ifEdit: EditEmail)
                     
-                    ProfilComponentUser(title: "Mot de Passe :", content: $viewModel.currentUser.email, ifEdit: EditEmail, isVisible: passwordIsVisible)
+                    HStack {
+                        ProfilComponentUser(title: "Mot de Passe :", content: $password, ifEdit: EditPassword, isVisible: passwordIsVisible)
+                        
+                        Button(action: {
+                            self.showChangePassword.toggle()
+                        }) {
+                            HStack {
+                                Text(EditPassword ? "Valider" : "")
+                                    .foregroundStyle(.accent)
+                            }
+                            
+                        }
+                        .buttonStyle(.bordered)
+                        .frame(height: 13)
+                    }
                 
                     VStack(spacing: 0) {
                         HStack(spacing: 10) {
@@ -274,6 +291,38 @@ struct ProfilView: View {
                     dismissButton: .default(Text("OK"))
                 )
             }
+            .sheet(isPresented: $showChangePassword) {
+                VStack {
+                    Text("Entrez votre ancien mot de passe")
+                        .font(.title)
+                        .padding()
+                    
+                    SecureField("Ancien mot de passe", text: $oldPassword)
+                        .padding()
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                    
+                    Button("Confirmer") {
+                        if oldPassword != "" {
+                            showChangePassword = false
+                            EditPassword = true
+                            password = ""
+                        }
+                    }
+                    .padding()
+                    
+                    //                                if !isPasswordCorrect {
+                    //                                    Text("Mot de passe incorrect")
+                    //                                        .foregroundColor(.red)
+                    //                                        .padding(.top, 10)
+                    //                                }
+                    
+                    Button("Annuler") {
+                        showChangePassword = false // Fermer la feuille modale
+                    }
+                    .padding()
+                }
+                .padding()
+            }
 //            .onChange(of: viewModel, {
 //                viewModel.updateUserData()
 //            })
@@ -335,17 +384,17 @@ struct ProfilComponentUser : View {
                     })
             }
             
-            if title == "Mot de Passe :" {
-                
-                Button(action: {
-                    self.isVisible?.toggle()
-                }) {
-                    Image(systemName: isVisible ?? false ? "eye" : "eye.slash")
-                        .padding(.trailing, 30)
-                        .foregroundStyle(.grey)
-                }
-                .frame(height: spaceComponents)
-            }
+//            if title == "Mot de Passe :" {
+//                
+//                Button(action: {
+//                    self.ifEdit.toggle()
+//                }) {
+//                    Image(systemName: ifEdit ? "pencil" : "pencil.slash")
+//                        .padding(.trailing, 30)
+//                        .foregroundStyle(.grey)
+//                }
+//                .frame(height: spaceComponents)
+//            }
         }
     }
 }

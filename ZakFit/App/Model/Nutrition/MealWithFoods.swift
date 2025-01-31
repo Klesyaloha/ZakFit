@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct MealWithFoods: Codable, Identifiable {
+class MealWithFoods: Codable, Identifiable {
     var id: UUID
     var meal: Meal
     var foods: [Food]

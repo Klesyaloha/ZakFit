@@ -14,6 +14,7 @@ struct ZakFitApp: App {
     @StateObject var typeActivityViewModel = TypeActivityViewModel()
     @StateObject var mealViewModel = MealViewModel()
     @StateObject var foodViewModel = FoodViewModel()
+    @StateObject var compositionViewModel = CompositionViewModel()
     
     init() {
         // Change la couleur du titre dans toutes les vues avec une navigation bar
@@ -33,11 +34,14 @@ struct ZakFitApp: App {
             else {
                 TabBarView()
             }
-                
-        }.environmentObject(userViewModel)
-            .environmentObject(physicalActivityViewModel)
-            .environmentObject(typeActivityViewModel)
-            .environmentObject(mealViewModel)
-            .environmentObject(foodViewModel)
+            
+        }
+        .environment(\.locale, Locale(identifier: "fr_FR")) // Remplace par la locale souhaitée
+        .environmentObject(userViewModel)
+        .environmentObject(physicalActivityViewModel)
+        .environmentObject(typeActivityViewModel)
+        .environmentObject(mealViewModel)
+        .environmentObject(foodViewModel)
+        .environmentObject(compositionViewModel)
     }
 }

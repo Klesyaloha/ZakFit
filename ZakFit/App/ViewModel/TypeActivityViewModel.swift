@@ -11,7 +11,7 @@ import SwiftUI
 class TypeActivityViewModel: ObservableObject, @unchecked Sendable {
     @Published var typeActivities: [TypeActivity] = []
     @Published var errorMessage: String?
-    private let baseURL = "http://127.0.0.1:8080/type_activities/"
+    private let baseURL = "http://192.168.0.199:8080/type_activities/"
     
     // Fonction pour charger tous les types d'activités
     func fetchTypeActivities() async {

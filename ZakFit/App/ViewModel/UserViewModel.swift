@@ -23,7 +23,7 @@ class UserViewModel: ObservableObject, @unchecked Sendable {
     @Published var showUpdateAlert: Bool = false  // Contrôler l'affichage de l'alerte
     @Published var alertUpdateMessage: String = "" // Message à afficher dans l'alerte
     
-    private let baseURL = "http://127.0.0.1:8080/users/"
+    private let baseURL = "http://192.168.0.199:8080/users/"
     
     func login() async {
         guard let url = URL(string: "\(baseURL)login") else {
@@ -354,6 +354,55 @@ class UserViewModel: ObservableObject, @unchecked Sendable {
         } else {
             // Sinon, on l'ajoute
             self.currentUser.eatChoice.append(index)
+        }
+    }
+    
+    func changePassword(oldPassword: String, newPassword: String) async {
+        guard let url = URL(string: "\(baseURL)\(currentUser.idUser.uuidString)/update-password") else {
+            DispatchQueue.main.async {
+                self.errorMessage = "URL invalide."
+            }
+            return
+        }
+
+        let passwordUpdate = [
+            "oldPassword": oldPassword,
+            "newPassword": newPassword
+        ]
+
+        do {
+            let jsonData = try JSONEncoder().encode(passwordUpdate)
+
+            var request = URLRequest(url: url)
+            request.httpMethod = "POST"
+            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+
+            // Ajouter le token à l'en-tête Authorization
+            guard let token = KeychainManager.getTokenFromKeychain() else {
+                DispatchQueue.main.async {
+                    self.errorMessage = "Erreur lors de la récupération du token."
+                }
+                return
+            }
+            request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+            request.httpBody = jsonData
+
+            let (data, response) = try await URLSession.shared.data(for: request)
+
+            if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 {
+                DispatchQueue.main.async {
+                    self.alertUpdateMessage = "Mot de passe changé avec succès."
+                    self.showUpdateAlert = true
+                }
+            } else {
+                DispatchQueue.main.async {
+                    self.errorMessage = "Échec du changement de mot de passe."
+                }
+            }
+        } catch {
+            DispatchQueue.main.async {
+                self.errorMessage = "Erreur: \(error.localizedDescription)"
+            }
         }
     }
 }

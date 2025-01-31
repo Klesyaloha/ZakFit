@@ -19,7 +19,7 @@ class MealViewModel: ObservableObject {
     
     @ObservedObject var compositionViewModel = CompositionViewModel() // Ajouter CompositionViewModel pour gérer les compositions
     
-    private let baseURL = "http://127.0.0.1:8080/meals/"
+    private let baseURL = "http://192.168.0.199:8080/meals/"
     
     // Charger tous les repas de l'utilisateur
     func fetchMeals() async {
@@ -51,7 +51,7 @@ class MealViewModel: ObservableObject {
             do {
                 let decodedMeals = try decoder.decode([Meal].self, from: data)
                 self.mealsOnly = decodedMeals
-                print(decodedMeals)
+//                print(decodedMeals)
             } catch {
                 self.errorMessage = "Erreur lors du décodage des repas: \(error.localizedDescription)"
             }
@@ -78,8 +78,17 @@ class MealViewModel: ObservableObject {
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         
+        let isoFormatter = ISO8601DateFormatter()
+        let jsonBody: [String: Any] = [
+            "nameMeal": meal.nameMeal,
+            "typeOfMeal": meal.typeOfMeal,
+            "quantityMeal": meal.quantityMeal,
+            "dateMeal": isoFormatter.string(from: meal.dateMeal), // Format ISO 8601
+            "caloriesByMeal": meal.caloriesByMeal
+        ]
+        
         do {
-            let jsonData = try JSONEncoder().encode(meal)
+            let jsonData = try JSONSerialization.data(withJSONObject: jsonBody)
             request.httpBody = jsonData
             
             let (_, response) = try await URLSession.shared.data(for: request)
@@ -109,12 +118,25 @@ class MealViewModel: ObservableObject {
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         
+        let isoFormatter = ISO8601DateFormatter()
+        let jsonBody: [String: Any] = [
+            "nameMeal": meal.nameMeal,
+            "typeOfMeal": meal.typeOfMeal,
+            "quantityMeal": meal.quantityMeal,
+            "dateMeal": isoFormatter.string(from: meal.dateMeal), // Format ISO 8601
+            "caloriesByMeal": meal.caloriesByMeal
+//            ,
+//            "user": {
+//                "id": meal.user.id
+//            }
+        ]
+        
         do {
-            let jsonData = try JSONEncoder().encode(meal)
+            let jsonData = try JSONSerialization.data(withJSONObject: jsonBody)
             request.httpBody = jsonData
             
             let (_, response) = try await URLSession.shared.data(for: request)
-            guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
+            guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 201 else {
                 throw URLError(.badServerResponse)
             }
             
@@ -190,7 +212,7 @@ class MealViewModel: ObservableObject {
             do {
                 let decodedMealsWithFood = try decoder.decode([MealWithFoods].self, from: data)
                 self.meals = decodedMealsWithFood
-                print(decodedMealsWithFood)
+//                print(decodedMealsWithFood)
             } catch let decodingError as DecodingError {
                 // Gestion des erreurs de décryptage spécifiques
                 switch decodingError {

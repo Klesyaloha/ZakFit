@@ -35,20 +35,19 @@ struct Composition: Codable, Identifiable, @unchecked Sendable {
 
 // Struct pour représenter un aliment partiel (juste un ID ou d'autres propriétés si nécessaire)
 struct PartialFood: Codable {
-    let id: UUID
-    let name: String
+    var id: UUID
 }
 
 // Struct pour représenter un repas partiel (comme dans le modèle Meal)
 struct PartialMeal: Codable {
-    let id: UUID
-    let nameMeal: String
+    var id: UUID
 }
 
 // Pour l'utilisation dans des réponses JSON, tu peux avoir des structures comme ceci :
 struct PartialComposition: Codable {
-    let foodId: UUID
-    let mealId: UUID
+    var id: UUID
+    var foodId: UUID
+    var mealId: UUID
     var quantity: Double
 }
 

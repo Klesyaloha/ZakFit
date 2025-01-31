@@ -57,8 +57,6 @@ struct ActivitiesView: View {
                                     ForEach(viewModel.activities.filter { $0.formattedDate == date }) { activity in
                                         
                                         Button(action: {
-                                               
-                                     
                                             if addOverlay && addDeleteButton {
                                                 Task {
                                                     await viewModel.updateActivity(currentActivity)
@@ -94,7 +92,7 @@ struct ActivitiesView: View {
                                                 Spacer()
                                                     .frame(width: 40, alignment: .center)
                                                 
-                                                Text("-\(Int(activity.caloriesBurned ?? 0))cal")
+                                                Text("-\(Int(activity.caloriesBurned ?? 0))kcal")
                                                     .font(.system(size: 16, weight: .semibold))
                                                     .foregroundStyle(.grey)
                                                     .frame(width: 83, alignment: .center)
@@ -220,7 +218,6 @@ struct AddActivityOverlay : View {
                     ForEach(typeActivityViewModel.typeActivities.indices, id: \.self) { index in
                         Button(action: {
                             newActivity.typeActivity = typeActivityViewModel.typeActivities[index]
-                            print(newActivity.typeActivity.id)
                         }) {
                             Text(typeActivityViewModel.typeActivities[index].nameTypeActivity ?? "Aucun")
                                 .font(.system(size: 16, weight: .regular)) // Personnalisation
@@ -229,8 +226,11 @@ struct AddActivityOverlay : View {
                     }
                 } label: {
                     Text(newActivity.typeActivity.nameTypeActivity ?? "Aucun")
-                        .frame(maxWidth: .infinity)
+                        .padding(.horizontal)
                         .frame(height: 32)
+                    Image(systemName: "chevron.up.chevron.down")
+                        .padding(.trailing)
+                        .foregroundStyle(.grey)
                 }
                 .accentColor(.grey)
                 .font(.system(size: 15, weight: .semibold))
@@ -263,6 +263,24 @@ struct AddActivityOverlay : View {
                     TextField(value: $newActivity.durationActivity, format: .number, label: {
                         Text("\(newActivity.durationActivity,  specifier: "%.1f")")
                     })
+                    .onChange(of: newActivity.durationActivity) {
+                        var coeff = 1.0
+                        
+                        if newActivity.typeActivity.nameTypeActivity == "Cardio" {
+                            coeff = 10.0
+                        }
+                        else if newActivity.typeActivity.nameTypeActivity == "Musculation" {
+                            coeff = 6.0
+                        }
+                        else if newActivity.typeActivity.nameTypeActivity == "Yoga" {
+                            coeff = 4.0
+                        }
+                        else if newActivity.typeActivity.nameTypeActivity == "Marche" {
+                            coeff = 5.0
+                        }
+                        
+                        newActivity.caloriesBurned = coeff * newActivity.durationActivity
+                    }
                     .multilineTextAlignment(.center)
                     .keyboardType(.decimalPad)
                     .font(.system(size: 15))
@@ -336,7 +354,7 @@ struct AddActivityOverlay : View {
                         .cornerRadius(24)
                 }
                 
-                Text("cal")
+                Text("kcal")
                     .font(.system(size: 12))
                     .bold()
                     .foregroundColor(.white)
@@ -356,7 +374,7 @@ struct AddActivityOverlay : View {
                 Spacer()
                 
                 DatePicker(selection: $newActivity.dateActivity, label: {
-                    /*@START_MENU_TOKEN@*/Text("Date")/*@END_MENU_TOKEN@*/
+                    Text("Date")
                 })
                 .padding(.horizontal)
                 .colorScheme(.dark)
